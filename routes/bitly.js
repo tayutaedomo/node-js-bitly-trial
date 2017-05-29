@@ -105,6 +105,36 @@ router.post('/lookup', function(req, res, next) {
   });
 });
 
+router.get('/clicks', function(req, res, next) {
+  res.render('bitly/clicks', {
+    title: 'Clicks API',
+    data: {}
+  });
+});
+
+router.post('/clicks', function(req, res, next) {
+  var bitly = create_bitly();
+
+  bitly.clicks([req.body.key]).then(function(result) {
+    res.render('bitly/clicks', {
+      title: 'clicks API',
+      data: {
+        result: result,
+        resultStr: beautify(JSON.stringify(result), { indent_size: 2 })
+      }
+    });
+
+  }).catch(function(reason) {
+    res.render('bitly/clicks', {
+      title: 'Clicks API',
+      data: {
+        error: reason,
+        errorStr: beautify(JSON.stringify(reason), { indent_size: 2 })
+      }
+    });
+  });
+});
+
 
 module.exports = router;
 

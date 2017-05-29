@@ -45,6 +45,36 @@ router.post('/shorten', function(req, res, next) {
   });
 });
 
+router.get('/expand', function(req, res, next) {
+  res.render('bitly/expand', {
+    title: 'Expand API',
+    data: {}
+  });
+});
+
+router.post('/expand', function(req, res, next) {
+  var bitly = create_bitly();
+
+  bitly.expand([req.body.url]).then(function(result) {
+    res.render('bitly/expand', {
+      title: 'Expand API',
+      data: {
+        result: result,
+        resultStr: beautify(JSON.stringify(result), { indent_size: 2 })
+      }
+    });
+
+  }).catch(function(reason) {
+    res.render('bitly/expand', {
+      title: 'Expand API',
+      data: {
+        error: reason,
+        errorStr: beautify(JSON.stringify(reason), { indent_size: 2 })
+      }
+    });
+  });
+});
+
 router.get('/lookup', function(req, res, next) {
   res.render('bitly/lookup', {
     title: 'Lookup API',
@@ -56,8 +86,6 @@ router.post('/lookup', function(req, res, next) {
   var bitly = create_bitly();
 
   bitly.lookup([req.body.url]).then(function(result) {
-    debug('shorten', result);
-
     res.render('bitly/lookup', {
       title: 'Lookup API',
       data: {

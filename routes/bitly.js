@@ -13,7 +13,6 @@ function create_bitly() {
   return new Bitly(process.env.BITLY_ACCESS_TOKEN)
 }
 
-/* GET users listing. */
 router.get('/shorten', function(req, res, next) {
   res.render('bitly/shorten', {
     title: 'Shorten API',
@@ -38,6 +37,38 @@ router.post('/shorten', function(req, res, next) {
   }).catch(function(reason) {
     res.render('bitly/shorten', {
       title: 'Shorten API',
+      data: {
+        error: reason,
+        errorStr: beautify(JSON.stringify(reason), { indent_size: 2 })
+      }
+    });
+  });
+});
+
+router.get('/lookup', function(req, res, next) {
+  res.render('bitly/lookup', {
+    title: 'Lookup API',
+    data: {}
+  });
+});
+
+router.post('/lookup', function(req, res, next) {
+  var bitly = create_bitly();
+
+  bitly.lookup([req.body.url]).then(function(result) {
+    debug('shorten', result);
+
+    res.render('bitly/lookup', {
+      title: 'Lookup API',
+      data: {
+        result: result,
+        resultStr: beautify(JSON.stringify(result), { indent_size: 2 })
+      }
+    });
+
+  }).catch(function(reason) {
+    res.render('bitly/lookup', {
+      title: 'Lookup API',
       data: {
         error: reason,
         errorStr: beautify(JSON.stringify(reason), { indent_size: 2 })

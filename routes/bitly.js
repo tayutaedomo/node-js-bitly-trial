@@ -117,7 +117,7 @@ router.post('/clicks', function(req, res, next) {
 
   bitly.clicks([req.body.key]).then(function(result) {
     res.render('bitly/clicks', {
-      title: 'clicks API',
+      title: 'Clicks API',
       data: {
         result: result,
         resultStr: beautify(JSON.stringify(result), { indent_size: 2 })
@@ -127,6 +127,36 @@ router.post('/clicks', function(req, res, next) {
   }).catch(function(reason) {
     res.render('bitly/clicks', {
       title: 'Clicks API',
+      data: {
+        error: reason,
+        errorStr: beautify(JSON.stringify(reason), { indent_size: 2 })
+      }
+    });
+  });
+});
+
+router.get('/referrers', function(req, res, next) {
+  res.render('bitly/referrers', {
+    title: 'Referrers API',
+    data: {}
+  });
+});
+
+router.post('/referrers', function(req, res, next) {
+  var bitly = create_bitly();
+
+  bitly.referrers(req.body.key).then(function(result) {
+    res.render('bitly/referrers', {
+      title: 'Referrers API',
+      data: {
+        result: result,
+        resultStr: beautify(JSON.stringify(result), { indent_size: 2 })
+      }
+    });
+
+  }).catch(function(reason) {
+    res.render('bitly/referrers', {
+      title: 'Referrers API',
       data: {
         error: reason,
         errorStr: beautify(JSON.stringify(reason), { indent_size: 2 })
